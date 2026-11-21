@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales CRM - Customer Reports</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Sales CRM</h1>
+        <p>Customer Order Reporting Dashboard</p>
+    </header>
+
+    <main>
+        <h2>Customer Reports</h2>
+
+        <p id="status">Loading customer reports...</p>
+
+        <div id="customer-list"></div>
+    </main>
+
+    <script>
+
+        async function loadReports() {
+
+            const status = document.getElementById("status");
+            const customerList = document.getElementById("customer-list");
+
+            try {
+
+                const response = await fetch("/api/reports");
+
+                if (!response.ok) {
+                    throw new Error("Could not load reports");
+                }
+
+                const customers = await response.json();
+
+                customerList.replaceChildren();
+
+                if (customers.length === 0) {
+                    status.textContent = "No customer reports found.";
+                    return;
+                }
+
+                status.textContent = "";
+
+                customers.forEach(customer => {
+
+                    const card = document.createElement("div");
+                    card.className = "customer-card";
+
+                    const name = document.createElement("h3");
+                    name.textContent = customer.customer_name;
+
+                    const email = document.createElement("p");
+                    email.textContent = "Email: " +
+                        (customer.email || "Not available");
+
+                    const orders = document.createElement("p");
+                    orders.textContent = "Total Orders: " +
+                        customer.total_orders;
+
+                    const sales = document.createElement("p");
+                    sales.textContent = "Total Sales: ₹" +
+                        Number(customer.total_sales).toFixed(2);
+
+                    const file = document.createElement("p");
+                    file.textContent = "Report: " +
+                        customer.report_file;
+
+                    const button = document.createElement("button");
+                    button.textContent = "Send Report";
+
+                    // Send Report button functionality
+                    button.addEventListener("click", async () => {
+
+                        button.disabled = true;
+                        button.textContent = "Sending...";
+
+                        try {
+
+                            const response = await fetch(
+                                "/api/send-report",
+                                {
+                                    method: "POST",
+
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    },
+
+                                    body: JSON.stringify({
+                                        customer_id: customer.customer_id
+                                    })
+                                }
+                            );
+
+                            const result = await response.json();
+
+                            alert(result.message);
+
+                            if (result.success) {
+
+                                button.textContent = "Report Sent";
+
+                            } else {
+
+                                button.disabled = false;
+                                button.textContent = "Retry Sending";
+
+                            }
+
+                        } catch (error) {
+
+                            alert("Unable to contact the server.");
+
+                            button.disabled = false;
+                            button.textContent = "Retry Sending";
+
+                        }
+
+                    });
+
+                    card.append(
+                        name,
+                        email,
+                        orders,
+                        sales,
+                        file,
+                        button
+                    );
+
+                    customerList.appendChild(card);
+
+                });
+
+            } catch (error) {
+
+                status.textContent =
+                    "Error loading reports: " + error.message;
+
+            }
+
+        }
+
+        loadReports();
+
+    </script>
+
+</body>
+</html>

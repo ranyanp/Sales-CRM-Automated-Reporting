@@ -1,0 +1,20 @@
+# Environment credentials
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+# Virtual environment
+.venv/
+venv/
+
+# Generated Excel reports
+reports/*
+!reports/.gitkeep
+sales_report.xlsx
+
+# Mac system files
+.DS_Store
+
+# Logs
+*.log

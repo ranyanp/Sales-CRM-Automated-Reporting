@@ -1,0 +1,67 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    color: #333;
+}
+
+header {
+    background: #1e293b;
+    color: white;
+    padding: 25px 40px;
+}
+
+header h1 {
+    margin-bottom: 8px;
+}
+
+main {
+    padding: 30px 40px;
+}
+
+main h2 {
+    margin-bottom: 20px;
+}
+
+#customer-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.customer-card {
+    background: white;
+    padding: 22px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.customer-card h3 {
+    color: #1e293b;
+    margin-bottom: 15px;
+}
+
+.customer-card p {
+    margin-bottom: 10px;
+    overflow-wrap: anywhere;
+}
+
+button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 11px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
